@@ -10,6 +10,7 @@
 class UInputAction;
 class UInputMappingContext;
 class UCameraComponent;
+enum class EPirateCharacterState : uint8;
 
 UCLASS()
 class PIRATES_API APirateCharacterBase : public ACharacter
@@ -28,6 +29,8 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+#pragma region Input
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -50,6 +53,8 @@ protected:
 	/** Look Input Action */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirate|Input")
 	TObjectPtr<UInputAction> LookAction;
+
+#pragma endregion 
 
 public:	
 	// Sets default values for this character's properties
