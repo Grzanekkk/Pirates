@@ -7,6 +7,9 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Pirates/Enums/CharacterEnums.h"
+#include "Pirates/Components/PirateInteractionComponent.h"
+#include "Pirates/ShipParts/ShipControllPart.h"
 
 // Sets default values
 APirateCharacterBase::APirateCharacterBase()
@@ -23,6 +26,8 @@ APirateCharacterBase::APirateCharacterBase()
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
+	InteractionComponent = CreateDefaultSubobject<UPirateInteractionComponent>("InteractionComponent");
+
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -30,6 +35,8 @@ APirateCharacterBase::APirateCharacterBase()
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
+	PlayerCharacterState = EPirateCharacterState::WALK;
 }
 
 // Called when the game starts or when spawned
@@ -59,18 +66,59 @@ void APirateCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+
+	SetPlayerActionsBasedOnState();
+}
+
+void APirateCharacterBase::SetPlayerState(EPirateCharacterState NewPlayerCharacterState)
+{
+	if (PlayerCharacterState != NewPlayerCharacterState)
 	{
-		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		PlayerCharacterState = NewPlayerCharacterState;
 
-		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Move);
+		SetPlayerActionsBasedOnState();
+	}
+}
 
-		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Look);
+void APirateCharacterBase::SetPlayerActionsBasedOnState()
+{
+	if (ensure(EnhancedInputComponent))
+	{
+		EnhancedInputComponent->ClearActionBindings();
+		EnhancedInputComponent->ClearAxisBindings();
+
+		switch (PlayerCharacterState)
+		{
+			case EPirateCharacterState::WALK:
+			{
+				//Jumping
+				EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+				EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
+				//Moving
+				EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Move);
+
+				//Looking
+				EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Look);
+
+				//Interaction
+				EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
+
+				break;
+			}
+			case EPirateCharacterState::STEERING_WHEEL:
+			{
+				//Looking
+				EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::SemiLockedLook);
+
+				EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::TurnWheel);
+
+				EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
+
+				break;
+			}
+		}
 	}
 }
 
@@ -98,4 +146,23 @@ void APirateCharacterBase::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void APirateCharacterBase::SemiLockedLook(const FInputActionValue& Value)
+{
+}
+
+void APirateCharacterBase::TurnWheel(const FInputActionValue& Value)
+{
+	TObjectPtr<AShipControllPart> Wheele = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
+	if (Wheele)
+	{
+		Wheele->AddControllValue(Value.Get<float>());
+	}
+}
+
+void APirateCharacterBase::Interact(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Interacting"));
+	InteractionComponent->PrimaryInteract();
 }
