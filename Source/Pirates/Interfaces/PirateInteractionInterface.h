@@ -43,7 +43,7 @@ public:
 
 	// If set to false this interactable can only be interacted by non player objects fe: levers, zones
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Pirates|Interaction")
-	bool CanBeInteractedByPlayerCharacter();
+	bool CanShowInteractionWidget(APawn* Instigator);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Pirates|Interaction")
 	FVector GetInteractionWidgetLocation();

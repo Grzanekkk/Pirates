@@ -64,7 +64,7 @@ void UPirateInteractionComponent::FindBestInteractable()
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor)
 		{
-			if (HitActor->Implements<UPirateInteractionInterface>() && IPirateInteractionInterface::Execute_IsEnabled(HitActor) && IPirateInteractionInterface::Execute_CanBeInteractedByPlayerCharacter(HitActor))
+			if (HitActor->Implements<UPirateInteractionInterface>() && IPirateInteractionInterface::Execute_IsEnabled(HitActor) && IPirateInteractionInterface::Execute_CanShowInteractionWidget(HitActor, OwnerPawn))
 			{
 				FocusedActor = HitActor;
 				break;

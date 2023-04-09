@@ -14,6 +14,8 @@ enum class EPirateCharacterState : uint8
 	STEERING_WHEEL UMETA(DisplayName = "Steering Wheel"),
 	RAISING_SAILS UMETA(DisplayName = "Raising Sails"),
 	ADJUSTING_SAILS UMETA(DisplayName = "Adjusting Sails"),
+	RAISING_ANCHOR UMETA(DisplayName = "Raising Anchor"),
+	CLIMBING_LADDER UMETA(DisplayName = "Climbing Ladder"),
 	MAX
 };
 
