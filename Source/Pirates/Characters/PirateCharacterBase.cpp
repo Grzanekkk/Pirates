@@ -118,6 +118,17 @@ void APirateCharacterBase::SetPlayerActionsBasedOnState()
 
 				break;
 			}
+			case EPirateCharacterState::RAISING_SAILS:
+			{
+				//Looking
+				EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::SemiLockedLook);
+
+				//EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::TurnWheel);
+
+				EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
+
+				break;
+			}
 		}
 	}
 }

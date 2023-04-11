@@ -31,8 +31,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void AddControllValueBP(float ControllDirection);
 
-
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
