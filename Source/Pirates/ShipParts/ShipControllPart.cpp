@@ -35,6 +35,27 @@ AShipControllPart::AShipControllPart()
 	PirateCharacterStateWhenControlling = EPirateCharacterState::NONE;
 }
 
+void AShipControllPart::Look(const FInputActionValue& Value)
+{
+	// Input is a Vector2D
+	FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	FRotator DeltaRotation;
+	DeltaRotation.Pitch = -LookAxisVector.Y;
+	DeltaRotation.Yaw = LookAxisVector.X;
+	DeltaRotation.Roll = 0.0f;
+
+	FRotator FutureRotation = ControllPartCamera->GetRelativeRotation() + DeltaRotation;
+	if (FutureRotation.Pitch > MinRotation.Pitch &&
+		FutureRotation.Yaw > MinRotation.Yaw &&
+		FutureRotation.Pitch < MaxRotation.Pitch &&
+		FutureRotation.Yaw < MaxRotation.Yaw
+		)
+	{
+		ControllPartCamera->AddLocalRotation(DeltaRotation);
+	}
+}
+
 // Called when the game starts or when spawned
 void AShipControllPart::BeginPlay()
 {
@@ -48,6 +69,9 @@ void AShipControllPart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FRotator NewRotation = ControllPartCamera->GetComponentRotation();
+	NewRotation.Roll = 0.0f;
+	ControllPartCamera->SetWorldRotation(NewRotation);
 }
 
 void AShipControllPart::AddControllValue(float ControllDirection)
@@ -64,7 +88,6 @@ void AShipControllPart::OnCameraBlendInFinished()
 		Controller->SetControlRotation(PlayerLocationPoint->GetComponentRotation());
 	}
 }
-
 
 #pragma region InteractionInterface
 

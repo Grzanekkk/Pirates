@@ -61,6 +61,8 @@ protected:
 
 	void SetPlayerActionsBasedOnState();
 
+	void LockCamera();
+
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 

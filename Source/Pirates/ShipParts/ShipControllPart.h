@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Pirates/Interfaces/PirateInteractionInterface.h"
+#include "InputActionValue.h"
 #include "ShipControllPart.generated.h"
 
 class UCameraComponent;
@@ -30,6 +31,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void AddControllValueBP(float ControllDirection);
+
+	void Look(const FInputActionValue& Value);
 
 protected:
 	// Called when the game starts or when spawned
@@ -64,6 +67,12 @@ protected:
 
 	UPROPERTY()
 	FTimerHandle CameraBlendInTimer;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Settings")
+	FRotator MinRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Settings")
+	FRotator MaxRotation = FRotator::ZeroRotator;
 
 
 #pragma region Components

@@ -2,14 +2,15 @@
 
 
 #include "PirateCharacterBase.h"
+#include "Pirates/Enums/CharacterEnums.h"
+#include "Pirates/Components/PirateInteractionComponent.h"
+#include "Pirates/ShipParts/ShipControllPart.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Pirates/Enums/CharacterEnums.h"
-#include "Pirates/Components/PirateInteractionComponent.h"
-#include "Pirates/ShipParts/ShipControllPart.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APirateCharacterBase::APirateCharacterBase()
@@ -133,6 +134,20 @@ void APirateCharacterBase::SetPlayerActionsBasedOnState()
 	}
 }
 
+void APirateCharacterBase::LockCamera()
+{
+	TObjectPtr<APlayerCameraManager> CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	if (CameraManager)
+	{
+		CameraManager->ViewPitchMax = 90.f;
+		CameraManager->ViewPitchMin = 90.f;
+		CameraManager->ViewRollMax = 90.f;
+		CameraManager->ViewRollMin = 90.f;
+		CameraManager->ViewYawMax = 90.f;
+		CameraManager->ViewYawMin = 90.f;
+	}
+}
+
 void APirateCharacterBase::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -161,6 +176,11 @@ void APirateCharacterBase::Look(const FInputActionValue& Value)
 
 void APirateCharacterBase::SemiLockedLook(const FInputActionValue& Value)
 {
+	TObjectPtr<AShipControllPart> ShipPart = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
+	if (ShipPart)
+	{
+		ShipPart->Look(Value);
+	}
 }
 
 void APirateCharacterBase::TurnWheel(const FInputActionValue& Value)
