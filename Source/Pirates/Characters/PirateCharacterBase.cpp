@@ -124,7 +124,7 @@ void APirateCharacterBase::SetPlayerActionsBasedOnState()
 				//Looking
 				EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::SemiLockedLook);
 
-				//EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::TurnWheel);
+				EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::RaisSail);
 
 				EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
 
@@ -189,6 +189,15 @@ void APirateCharacterBase::TurnWheel(const FInputActionValue& Value)
 	if (Wheele)
 	{
 		Wheele->AddControllValue(Value.Get<float>());
+	}
+}
+
+void APirateCharacterBase::RaisSail(const FInputActionValue& Value)
+{
+	TObjectPtr<AShipControllPart> Sail = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
+	if (Sail)
+	{
+		Sail->AddControllValue(Value.Get<float>());
 	}
 }
 

@@ -69,9 +69,12 @@ void AShipControllPart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator NewRotation = ControllPartCamera->GetComponentRotation();
-	NewRotation.Roll = 0.0f;
-	ControllPartCamera->SetWorldRotation(NewRotation);
+	if (bIsPlayerUsingControllPart)
+	{
+		FRotator NewRotation = ControllPartCamera->GetComponentRotation();
+		NewRotation.Roll = 0.0f;
+		ControllPartCamera->SetWorldRotation(NewRotation);
+	}
 }
 
 void AShipControllPart::AddControllValue(float ControllDirection)
@@ -98,6 +101,8 @@ void AShipControllPart::Interact_Implementation(APawn* InstigatorPawn)
 	{
 		ControllingPirateCharacter->SetPlayerState(PirateCharacterStateWhenControlling);
 		bIsPlayerUsingControllPart = true;
+
+		ControllPartCamera->SetRelativeRotation(FRotator::ZeroRotator);
 		ControllPartCamera->Activate();
 
 		TObjectPtr<APlayerController> PlayerController = Cast<APlayerController>(ControllingPirateCharacter->GetController());

@@ -75,6 +75,9 @@ protected:
 	/** Called for turning wheel input */
 	void TurnWheel(const FInputActionValue& Value);
 
+	/** Called for raising sail input */
+	void RaisSail(const FInputActionValue& Value);
+
 	/** Called for interaction input */
 	void Interact(const FInputActionValue& Value);
 
