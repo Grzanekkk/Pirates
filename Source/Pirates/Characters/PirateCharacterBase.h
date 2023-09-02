@@ -61,6 +61,8 @@ protected:
 
 	void SetPlayerActionsBasedOnState();
 
+	void SetPlayerActionsForShipControlls();
+
 	void LockCamera();
 
 	/** Called for movement input */
@@ -72,11 +74,14 @@ protected:
 	/** Called for looking during using a wheel or adjusting sails*/
 	void SemiLockedLook(const FInputActionValue& Value);
 
-	/** Called for turning wheel input */
-	void TurnWheel(const FInputActionValue& Value);
+	///** Called for turning wheel input */
+	//void TurnWheel(const FInputActionValue& Value);
+	//
+	///** Called for raising sail input */
+	//void RaisSail(const FInputActionValue& Value);
 
 	/** Called for raising sail input */
-	void RaisSail(const FInputActionValue& Value);
+	void AddShipControllPartValue(const FInputActionValue& Value);
 
 	/** Called for interaction input */
 	void Interact(const FInputActionValue& Value);

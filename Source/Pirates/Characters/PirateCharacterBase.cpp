@@ -110,28 +110,29 @@ void APirateCharacterBase::SetPlayerActionsBasedOnState()
 			}
 			case EPirateCharacterState::STEERING_WHEEL:
 			{
-				//Looking
-				EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::SemiLockedLook);
-
-				EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::TurnWheel);
-
-				EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
+				SetPlayerActionsForShipControlls();
 
 				break;
 			}
 			case EPirateCharacterState::RAISING_SAILS:
 			{
-				//Looking
-				EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::SemiLockedLook);
-
-				EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::RaisSail);
-
-				EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
+				SetPlayerActionsForShipControlls();
 
 				break;
 			}
 		}
 	}
+}
+
+void APirateCharacterBase::SetPlayerActionsForShipControlls()
+{
+	//Looking
+	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::SemiLockedLook);
+
+	EnhancedInputComponent->BindAction(TurnWheelAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::AddShipControllPartValue);
+
+	EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APirateCharacterBase::Interact);
+
 }
 
 void APirateCharacterBase::LockCamera()
@@ -183,21 +184,30 @@ void APirateCharacterBase::SemiLockedLook(const FInputActionValue& Value)
 	}
 }
 
-void APirateCharacterBase::TurnWheel(const FInputActionValue& Value)
-{
-	TObjectPtr<AShipControllPart> Wheele = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
-	if (Wheele)
-	{
-		Wheele->AddControllValue(Value.Get<float>());
-	}
-}
+//void APirateCharacterBase::TurnWheel(const FInputActionValue& Value)
+//{
+//	TObjectPtr<AShipControllPart> Wheele = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
+//	if (Wheele)
+//	{
+//		Wheele->AddControllValue(Value.Get<float>());
+//	}
+//}
+//
+//void APirateCharacterBase::RaisSail(const FInputActionValue& Value)
+//{
+//	TObjectPtr<AShipControllPart> Sail = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
+//	if (Sail)
+//	{
+//		Sail->AddControllValue(Value.Get<float>());
+//	}
+//}
 
-void APirateCharacterBase::RaisSail(const FInputActionValue& Value)
+void APirateCharacterBase::AddShipControllPartValue(const FInputActionValue& Value)
 {
-	TObjectPtr<AShipControllPart> Sail = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
-	if (Sail)
+	TObjectPtr<AShipControllPart> ShipControllPart = Cast<AShipControllPart>(InteractionComponent->CurrentlyInteractedActor);
+	if (ShipControllPart)
 	{
-		Sail->AddControllValue(Value.Get<float>());
+		ShipControllPart->AddControllValue(Value.Get<float>());
 	}
 }
 

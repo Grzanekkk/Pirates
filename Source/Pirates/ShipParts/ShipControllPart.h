@@ -56,6 +56,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Settings")
 	float CameraBlendOutTime = 0.5f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Data")
+	float CurrentControllValue = 0.f;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Settings")
 	EPirateCharacterState PirateCharacterStateWhenControlling;
 

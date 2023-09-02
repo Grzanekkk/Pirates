@@ -63,7 +63,6 @@ void AShipControllPart::BeginPlay()
 	
 }
 
-
 // Called every frame
 void AShipControllPart::Tick(float DeltaTime)
 {
@@ -71,15 +70,22 @@ void AShipControllPart::Tick(float DeltaTime)
 
 	if (bIsPlayerUsingControllPart)
 	{
+		// Camera Controlls
 		FRotator NewRotation = ControllPartCamera->GetComponentRotation();
 		NewRotation.Roll = 0.0f;
 		ControllPartCamera->SetWorldRotation(NewRotation);
 	}
 }
 
-void AShipControllPart::AddControllValue(float ControllDirection)
+void AShipControllPart::AddControllValue(float ControllValue)
 {
-	AddControllValueBP(ControllDirection);
+	float NewControllValue = CurrentControllValue + ControllValue;
+	if (NewControllValue >= ControllMinBounds && NewControllValue <= ControllMaxBounds)
+	{
+		CurrentControllValue = NewControllValue;
+
+		AddControllValueBP(ControllValue);
+	}
 }
 
 void AShipControllPart::OnCameraBlendInFinished()
