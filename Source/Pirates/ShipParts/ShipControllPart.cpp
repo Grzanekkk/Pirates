@@ -33,6 +33,8 @@ AShipControllPart::AShipControllPart()
 	ControllPartCamera->bAutoActivate = false;
 
 	PirateCharacterStateWhenControlling = EPirateCharacterState::NONE;
+
+	CurrentControllValue = ControllMinBounds;
 }
 
 void AShipControllPart::Look(const FInputActionValue& Value)
@@ -61,6 +63,7 @@ void AShipControllPart::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CurrentControllValue = StartingControllValue;
 }
 
 // Called every frame
@@ -79,12 +82,12 @@ void AShipControllPart::Tick(float DeltaTime)
 
 void AShipControllPart::AddControllValue(float ControllValue)
 {
-	float NewControllValue = CurrentControllValue + ControllValue;
+	float NewControllValue = CurrentControllValue + ControllValue * ControllMultiplier;
 	if (NewControllValue >= ControllMinBounds && NewControllValue <= ControllMaxBounds)
 	{
 		CurrentControllValue = NewControllValue;
 
-		AddControllValueBP(ControllValue);
+		AddControllValueBP(CurrentControllValue);
 	}
 }
 

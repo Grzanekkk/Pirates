@@ -27,10 +27,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//UFUNCTION(BlueprintNativeEvent)
-	virtual void AddControllValue(float ControllDirection);
+	virtual void AddControllValue(float ControllValue);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void AddControllValueBP(float ControllDirection);
+	void AddControllValueBP(float ControllValue);
 
 	void Look(const FInputActionValue& Value);
 
@@ -55,6 +55,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Settings")
 	float CameraBlendOutTime = 0.5f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Settings")
+	float StartingControllValue = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pirates|Data")
 	float CurrentControllValue = 0.f;
